@@ -1,4 +1,4 @@
-# Github link to project: 
+# Github link to project: https://github.com/drewmacleod/Free-Throw-Project/tree/main/Free%20throws
 
 import pandas as pd
 import numpy as np
@@ -107,16 +107,17 @@ def create_comparison_graph(df_original, chart_title, include_diff = False):
     if include_diff:
         y_columns = ['ft_difference_in_clutch','total_ft%','clutch_ft_decimal_percent']
         y_labels = ['FT % Difference in Clutch', 'Total FT %', 'Clutch FT %']
+        y_lim_min = min((df['ft_difference_in_clutch'].min() * 1.1), 0)
     else: 
         y_columns = ['total_ft%','clutch_ft_decimal_percent']
         y_labels = ['Total FT %', 'Clutch FT %']
-    y_lim_min = min((df['ft_difference_in_clutch'].min() * 1.1), 0)
+        y_lim_min = 0        
     bar = df.plot(x = 'Player', y= y_columns, kind = 'bar',title = chart_title, ylim = (y_lim_min,110), alpha = 0.6)
     bar.set_ylabel('Free Throw %')
     bar.yaxis.set_major_formatter(mtick.PercentFormatter())
     for i in bar.patches:
         bar.annotate(str(round(i.get_height(), 1))+'%', xy=((i.get_x() - .035), (i.get_height() + 0.01)))
-    bar.legend(loc='upper center', bbox_to_anchor=(1.2, 1.0),
+    bar.legend(loc='upper center', bbox_to_anchor=(0.7, 1.0),
           fancybox=True, labels= y_labels)
     return bar
 # Create Charts for 4 different cases we'd be interested in looking at.
@@ -131,5 +132,4 @@ clutch_and_total_combined['total_fta_w_out_clutch'] = clutch_and_total_combined[
 clutch_and_total_combined['total_ft%_w_out_clutch'] = clutch_and_total_combined['total_ftm_w_out_clutch'] / clutch_and_total_combined['total_fta_w_out_clutch']
 # Calculate Ttest Results and Print results and findings
 print(ttest_ind(clutch_and_total_combined['clutch_ft_decimal_percent'], clutch_and_total_combined['total_ft%_w_out_clutch']))
-print()
 print("P Value of 0.079 shows that there is a Statistically Signifcant difference at the 10 percent level (but not 5) where shooters perform worse at the free throw line in the Clutch vs. all other times")
